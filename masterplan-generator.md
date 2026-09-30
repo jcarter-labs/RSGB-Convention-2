@@ -1,6 +1,6 @@
 # Masterplan Generator: 20 Prompts for Spec-Driven Development
 
-You write a short app brief, then paste the prompts below into Claude Code, the **agent**. The agent builds `masterplan.md` from them: a short outline of your app that becomes its source of truth. Later, the agent builds your app from that masterplan.
+You answer five questions about your app, then paste the prompts below into Claude Code, the **agent**. The agent builds `masterplan.md` from them: a short outline of your app that becomes its source of truth. Later, the agent builds your app from that masterplan.
 
 **Label key** *(for you to read; don't paste)*
 
@@ -13,37 +13,47 @@ Paste only what's in the grey boxes. Everything else is for you to read.
 
 ## Before you start
 
-1. **Make an empty folder for your app**, and put in it a screenshot of an app like the one you want.
+New to Claude Code, or already using it? Either works. If you have a `CLAUDE.md` with your own standing instructions, keep it: the agent follows it alongside the masterplan.
 
-2. **Write your app brief.** In any notes app, fill in these five lines, replacing each [bracket]:
+1. **Install Claude Code** if you haven't (see docs.claude.com).
+
+2. **Open a terminal** (Terminal on Mac, PowerShell on Windows, your terminal on Linux), go to your app's folder, and start the agent. Pick one:
+
+   - **New folder** (`myapp` can be any name):
+
+     ```
+     mkdir myapp
+     cd myapp
+     claude
+     ```
+
+   - **Folder you already have** (type `cd` and a space, drag the folder into the window, press Return):
+
+     ```
+     cd <your folder>
+     claude
+     ```
+
+   Everything from here happens in this window.
+
+3. **Give the agent your screenshot** of an app like the one you want. Paste:
 
    ```
-   My app [does what] for [who]. It's like [example app, if any], except [what's different].
-   I'll build it on [Mac/Windows/Linux]; it must also run on [Mac/Windows/Linux].
-   Main features, most important first: [feature 1], [feature 2], [feature 3].
-   The user enters or sets: [inputs and settings, with typical values or ranges].
-   The screen shows: [displayed items]; its data comes from [a website, a file, a radio…].
+   PASTE: Find my screenshot in this folder, or ask me where it is. Copy it here as screenshot.png, keeping the original. It shows the look I want; don't build anything yet.
    ```
 
-   Be specific. The agent works from these lines, and a vague line means it has to guess.
+   If the agent asks where it is, drag the screenshot file into the window (that types its location), and press Return.
 
-3. **Install Claude Code** (see docs.claude.com), then **open a terminal in your folder:**
-   - **Mac:** open Terminal, type `cd` and a space, drag your folder into the window, and press Return.
-   - **Windows 11:** right-click your folder, and choose Open in Terminal.
-   - **Linux:** right-click your folder, and choose Open in Terminal.
-
-   Type `claude`, and press Return to start the agent.
-
-4. **Have the agent save your brief.** Paste this line, then your five filled-in lines under it:
+4. **Write your app brief with the agent.** Paste this; the agent asks you five questions, one at a time, and saves your answers as `idea.md`:
 
    ```
-   PASTE: Create idea.md containing exactly this text:
+   PASTE: If idea.md exists, show it and ask what to change. Otherwise, interview me for my app brief, one question at a time. 1) What does my app do, for whom, and is it like an existing app? 2) Which computer do I build on, and which must it also run on? 3) What are its main features, most important first? 4) What do I enter or set, with typical values or ranges? 5) What does the screen show, and where does its data come from? If an answer is vague, ask me for specifics. Then save my answers as idea.md and show it to me.
    ```
 
 5. **Paste the setup line:**
 
    ```
-   PASTE: Create masterplan.md with four sections: Constitution, Spec, Tech, Tasks. Read idea.md and my screenshot first.
+   PASTE: Create masterplan.md with four sections: Constitution, Spec, Tech, Tasks, or show me the one that exists. Read idea.md, my screenshot, and any CLAUDE.md first; tell me if they conflict.
    ```
 
 6. **Paste the legend** once. This is how the agent learns the labels:
@@ -51,10 +61,6 @@ Paste only what's in the grey boxes. Everything else is for you to read.
    ```
    PASTE: Each line I send starts with a label. RULE: add it to masterplan.md as written; follow it during the build, not now. DRAFT: write that part of masterplan.md, then show me for review. USER INPUT: ask me first, then write my answer into masterplan.md.
    ```
-
-> **Writing `idea.md` yourself instead?** Save it as plain text named exactly `idea.md`.
-> - **Mac TextEdit:** choose Format → Make Plain Text before saving.
-> - **Windows Notepad:** set "Save as type" to All files, or you'll get `idea.md.txt`.
 
 ## 1. Constitution: how we work *(paste all five at once)*
 
@@ -128,7 +134,13 @@ DRAFT: Add a final step: review what went wrong and propose masterplan updates f
    PASTE: Save everything into masterplan.md, keeping each section a short outline.
    ```
 
-2. **Read `masterplan.md` yourself,** and fix anything that doesn't match what you want.
+2. **Review it:**
+
+   ```
+   PASTE: Show me masterplan.md.
+   ```
+
+   Read it, and tell the agent in plain words anything to change.
 
 3. **Pressure-test:**
 
@@ -136,10 +148,10 @@ DRAFT: Add a final step: review what went wrong and propose masterplan updates f
    PASTE: Pressure-test masterplan.md for ambiguity; list unclear items with one-line fixes for my approval.
    ```
 
-4. **Save to GitHub:**
+4. **Save to GitHub** (uses your repo if the folder already has one):
 
    ```
-   PASTE: Create a private or public GitHub repo for this folder, as I choose; commit and push masterplan.md, idea.md and my screenshot.
+   PASTE: If this folder has no GitHub repo, create one, private or public as I choose. Commit and push masterplan.md, idea.md and my screenshot.
    ```
 
 5. **Build.** Type `/exit` to end this session, then type `claude` again to start a fresh one in the same folder, and paste:
