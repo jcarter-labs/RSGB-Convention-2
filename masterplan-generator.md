@@ -1,12 +1,13 @@
 # Masterplan Generator: 20 Prompts for Spec-Driven Development
 
-You answer five questions about your app, then paste the prompts below into Claude Code, the **agent**. The agent builds `masterplan.md` from them: a short outline of your app that becomes its source of truth. Later, the agent builds your app from that masterplan.
+You answer five questions about your app, then paste the prompts below into Claude Code, the **agent**. The agent builds `masterplan.md` from them: an outline of your app that becomes its source of truth. Later, the agent builds your app from that masterplan.
 
 **Label key** *(for you to read; don't paste)*
 
 - **RULE:** the agent writes it into the masterplan and follows it during the build, not now.
 - **DRAFT:** the agent writes that part of the masterplan now, and shows it to you for review.
 - **USER INPUT:** the agent asks you first, then writes down your answer.
+- **SET:** use it for your own answers and decisions; the agent writes them in as given.
 - **PASTE:** a plain instruction to paste as is.
 
 Paste only what's in the grey boxes. Everything else is for you to read.
@@ -47,28 +48,34 @@ New to Claude Code, or already using it? Either works. If you have a `CLAUDE.md`
 4. **Write your app brief with the agent.** Paste this; the agent asks you five questions, one at a time, and saves your answers as `idea.md`:
 
    ```
-   PASTE: If idea.md exists, show it and ask what to change. Otherwise, interview me for my app brief, one question at a time. 1) What does my app do, for whom, and is it like an existing app? 2) Which computer do I build on, and which must it also run on? 3) What are its main features, most important first? 4) What do I enter or set, with typical values or ranges? 5) What does the screen show, and where does its data come from? If an answer is vague, ask me for specifics. Then save my answers as idea.md and show it to me.
+   PASTE: If idea.md exists, show it and ask what to change. Otherwise, interview me for my app brief, one question at a time. 1) What does my app do, for whom, and is it like an existing app? If so, give a link to it (repo, manual or web page) and which of its behaviours matter to me. 2) Which computer do I build on, and which must it also run on? 3) What are its main features, most important first? 4) What do I enter or set, with typical values or ranges? 5) What does the screen show, and where does its data come from? If an answer is vague, ask me for specifics. Then save my answers as idea.md and show it to me.
    ```
 
-5. **Paste the setup line:**
+5. **Give your app its own repo.** This works even if a folder above yours is already a repo. Paste:
 
    ```
-   PASTE: Create masterplan.md with four sections: Constitution, Spec, Tech, Tasks, or show me the one that exists. Read idea.md, my screenshot, and any CLAUDE.md first; tell me if they conflict.
+   PASTE: Make this folder its own git repo: run git init here, even if a folder above it is a repo, and check that git rev-parse --show-toplevel prints this folder. If it has no GitHub repo, create one, private or public as I choose. Commit and push idea.md and my screenshot.
    ```
 
-6. **Paste the legend** once. This is how the agent learns the labels:
+6. **Paste the setup line:**
 
    ```
-   PASTE: Each line I send starts with a label. RULE: add it to masterplan.md as written; follow it during the build, not now. DRAFT: write that part of masterplan.md, then show me for review. USER INPUT: ask me first, then write my answer into masterplan.md.
+   PASTE: Create masterplan.md with only four empty section headings: Constitution, Spec, Tech, Tasks; don't fill them in. If it exists, show it instead. Read idea.md, my screenshot, and any CLAUDE.md in this folder; list any conflicts, and any memory notes you're using, one line each, for me to decide.
+   ```
+
+7. **Paste the legend** once. This is how the agent learns the labels:
+
+   ```
+   PASTE: Each line I send starts with a label. RULE: add it to masterplan.md as written; follow it during the build, not now. DRAFT: write that part of masterplan.md, then show me for review. USER INPUT: ask me first, then write my answer into masterplan.md. SET: write my answer into masterplan.md as given. Put each line in the section it's pasted under. Sections come in order; don't draft ahead.
    ```
 
 ## 1. Constitution: how we work *(paste all five at once)*
 
 ```
 RULE: Build from masterplan.md, idea.md and my screenshot; borrow language, tools, specs, or open-source code from examples as I choose.
-RULE: At the start of the build, check tools, libraries, GitHub login, and this folder's repo on my platforms; show pass/fail.
+RULE: At the start of the build, check tools, libraries, GitHub login, that this folder is its own repo root, and that each data source's host and port can be reached, on my platforms; show pass/fail.
 RULE: After each change, measure the app against the Spec's screen list; show pass/fail.
-RULE: After each working step: run all tests, show me proof, commit, and push to GitHub.
+RULE: After each working step: run all tests, show me proof, commit, and push to GitHub. Keep going within a stage; stop only at stage end, on a failed test, after two failed fixes, or for my decision.
 RULE: When code and masterplan disagree, propose only major changes, one line each; update the masterplan after I approve.
 ```
 
@@ -84,7 +91,7 @@ DRAFT: From my screenshot, list screen elements and controls, with where each si
 DRAFT: For each feature in idea.md, describe what the user does and sees, with testable ranges where possible.
 ```
 ```
-DRAFT: List where my app's data comes from, and how we'll check each source works.
+DRAFT: List where my app's data comes from, and how we'll check each source works, including after a reconnect. Send every server setting on each connect; never rely on settings from earlier sessions.
 ```
 ```
 USER INPUT: Ask which features from idea.md my app must do this iteration, and which wait; suggest if I'm unsure.
@@ -111,10 +118,10 @@ RULE: Keep a short list of known limitations in the masterplan; update it as we 
 ## 4. Tasks: in what order *(one at a time)*
 
 ```
-DRAFT: Break the build into small ordered steps, starting with setup and ending with a working app.
+DRAFT: Break the build into about 5 stages: environment (including measuring my screenshot with a script), data connections tested on live servers and ending with a bare window showing live data, core logic, features, and UI. Give each stage sub-steps and one done-when line.
 ```
 ```
-DRAFT: For each step, say how we'll test it and what result means it works.
+DRAFT: For each sub-step, say how we'll test it and what result means it works.
 ```
 ```
 RULE: Test connections to outside data with real servers before building screens that depend on them.
@@ -128,10 +135,10 @@ DRAFT: Add a final step: review what went wrong and propose masterplan updates f
 
 ## After you finish
 
-1. **Save:**
+1. **Tighten:**
 
    ```
-   PASTE: Save everything into masterplan.md, keeping each section a short outline.
+   PASTE: Tighten masterplan.md: remove repetition and prose; keep every number, range, rule and done-when line. Show me the line count before and after.
    ```
 
 2. **Review it:**
@@ -148,10 +155,10 @@ DRAFT: Add a final step: review what went wrong and propose masterplan updates f
    PASTE: Pressure-test masterplan.md for ambiguity; list unclear items with one-line fixes for my approval.
    ```
 
-4. **Save to GitHub** (uses your repo if the folder already has one):
+4. **Save to GitHub:**
 
    ```
-   PASTE: If this folder has no GitHub repo, create one, private or public as I choose. Commit and push masterplan.md, idea.md and my screenshot.
+   PASTE: Commit and push masterplan.md.
    ```
 
 5. **Build.** Type `/exit` to end this session, then type `claude` again to start a fresh one in the same folder, and paste:
@@ -166,7 +173,8 @@ DRAFT: Add a final step: review what went wrong and propose masterplan updates f
 - **Two failed fixes on the same bug:** stop, and ask the agent what it measured.
 - **"Should work" means untested.** Ask the agent for proof.
 - **When a data source fails,** ask the agent for likely causes and fixes.
+- **Agent can't reach a server:** Claude Code's sandbox blocks some network ports. Run the command it gives you in a second terminal, or allow it for that host only.
 - **Tests:** never let the agent change a test just to make it pass.
 - **Borrowed code:** note its license in the commit. GPL code makes your whole app GPL.
-- **GitHub:** your app's folder needs its own repo. A folder inside another repo commits to the parent.
-- **Keep the masterplan short:** it's an outline of what you want, not a record of every detail.
+- **GitHub:** your app's folder needs its own repo (Before you start, step 5). A folder inside another repo commits to the parent.
+- **Keep the masterplan tight, not thin:** cut prose and repetition, but keep every testable number and rule.
